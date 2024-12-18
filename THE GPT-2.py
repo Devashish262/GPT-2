@@ -55,3 +55,10 @@ class MultiHeadAttention(nn.Module):
         )
         context_vec = self.out_proj(context_vec)
         return context_vec
+        
+class LayerNorm(nn.Module):
+    def __init__(self, emb_dim):
+        super().__init__()
+        self.eps=1e-5
+        self.scale=nn.Parameter(torch.ones(emb_dim))
+        self.shift=nn.Parameter(torch.zeros(emb_dim))
