@@ -80,3 +80,26 @@ class FeedForward(nn.Module):
         self.layers=nn.Sequential(nn.Linear(cfg["emb_dim"],4*cfg["emb_dim"]), GELU(),nn.Linear(4*cfg["emb_dim"],cfg["emb_dim"]))
     def forward(self,x):
         return self.layers(x)
+
+class TransformerBlock(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.att = MultiHeadAttention(
+        d_in=cfg["emb_dim"],
+        d_out=cfg["emb_dim"],
+        context_length=cfg["context_length"],
+        num_heads=cfg["n_heads"],
+        dropout=cfg["drop_rate"],
+        qkv_bias=cfg["qkv_bias"])
+        self.ff = FeedForward(cfg)
+        self.norm1 = LayerNorm(cfg["emb_dim"])
+        self.norm2 = LayerNorm(cfg["emb_dim"])
+        self.drop_shortcut = nn.Dropout(cfg["drop_rate"])
+    def forward(self, x):
+        shortcut=x
+        x=self.drop_shortcut(self.ff(self.norm1(x)))
+        x=x+shortcut
+        shortcut=x
+        x=self.drop_shortcut(self.ff(self.norm2(x)))
+        x=x+shortcut
+        return x
