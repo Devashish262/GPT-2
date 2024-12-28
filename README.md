@@ -8,6 +8,8 @@ This repository contains a PyTorch implementation of a GPT-style transformer lan
 
 The model consists of several key components:
 
+![image](https://github.com/user-attachments/assets/68a5d2d0-8205-4985-8b13-c70852206f2a)
+
 ### **Configuration-**
  
 - Vocabulary Size: 50,257 tokens
